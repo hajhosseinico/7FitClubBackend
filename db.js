@@ -1,9 +1,9 @@
 const mysql = require('mysql');
 
 const connection = mysql.createConnection({
-  host: 'mariadb_new', // Make sure this matches the container name
+  host: '172.18.0.2', // Use the IP address of the MariaDB container
   user: 'root',
-  password: 'my_password', // Ensure this is correct
+  password: 'my_password',
   database: '7FitClubDB'
 });
 
