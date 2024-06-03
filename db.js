@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 
 const db = mysql.createConnection({
-    host: '172.18.0.2',
+    host: 'mariadb_new',
     user: 'root',
     password: 'your_password',
     database: '7FitClubDB'
