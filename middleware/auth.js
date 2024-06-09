@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const secretKey = 'your_secret_key';
+const secretKey = 'your_secret_key'; // Ensure this matches the secret used when generating the token
 
 const auth = (req, res, next) => {
     const token = req.header('Authorization').replace('Bearer ', '');
@@ -8,6 +8,7 @@ const auth = (req, res, next) => {
     }
     try {
         const decoded = jwt.verify(token, secretKey);
+        console.log('Decoded Token:', decoded); // Log the decoded token
         req.user = decoded;
         next();
     } catch (err) {

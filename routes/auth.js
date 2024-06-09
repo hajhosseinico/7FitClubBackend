@@ -78,12 +78,13 @@ router.post('/login', (req, res) => {
                 return res.status(400).json({ msg: 'Invalid credentials' });
             }
 
-            // Generate JWT
-            const token = jwt.sign({ id: user.id, userType: user.userType }, secretKey, { expiresIn: '24h' });
+            // Generate JWT with phonenumber
+            const token = jwt.sign({ phonenumber: user.phonenumber, userType: user.userType }, secretKey, { expiresIn: '24h' });
             console.log('Login successful, token generated:', token);
             res.json({ token });
         });
     });
 });
+
 
 module.exports = router;
