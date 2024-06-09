@@ -12,6 +12,16 @@ router.get('/', auth, (req, res) => {
     });
 });
 
+// Get a specific calendar event
+router.get('/:id', auth, (req, res) => {
+    const sql = 'SELECT * FROM trainers_calendar WHERE id = ?';
+    db.query(sql, [req.params.id], (err, result) => {
+      if (err) throw err;
+      if (result.length === 0) return res.status(404).json({ msg: 'Event not found' });
+      res.json(result[0]);
+    });
+  });
+
 // Add calendar event (admin only)
 router.post('/', auth, (req, res) => {
     if (req.user.userType !== 'admin') return res.status(403).json({ msg: 'Admin resources, access denied' });
