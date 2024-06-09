@@ -1,83 +1,71 @@
-const express = require('express');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const router = express.Router();
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../axiosConfig';
+import './Login.css';
+import logo from '../assets/images/logo.png';
+import image1 from '../assets/images/cards.png';
+import AuthContext from '../AuthContext';
 
-const secretKey = 'your_secret_key';
+const Login = () => {
+  const [phonenumber, setPhonenumber] = useState('');
+  const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
+  const { setAuth } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-const db = require('../db');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-// Registration Route
-router.post('/register', (req, res) => {
-    const { phonenumber, password, name, email, userType } = req.body;
-    console.log('Register request received:', req.body);
+    try {
+      const response = await api.post('/auth/login', { phonenumber, password });
+      console.log('Login response:', response.data);
+      setMessage('Login successful!');
+      console.log('Setting Auth - Token:', response.data.token, 'UserType:', response.data.userType);
+      setAuth({ token: response.data.token, userType: response.data.userType });
+      localStorage.setItem('authToken', response.data.token);
+      localStorage.setItem('userType', response.data.userType);
+      navigate('/calendar');
+    } catch (error) {
+      console.error('Error:', error.response ? error.response.data : error.message);
+      setMessage('Login failed. Please check your credentials and try again.');
+    }
+  };
 
-    const checkUserQuery = 'SELECT * FROM users WHERE phonenumber = ?';
-    db.query(checkUserQuery, [phonenumber], (err, results) => {
-        if (err) {
-            console.error('Database query error (check user):', err);
-            return res.status(500).json({ msg: 'Internal server error' });
-        }
+  return (
+    <div className="background-wrapper">
+      <div className="login-container">
+        <div className="login-header">
+          <img src={logo} alt="Fitclub" className="logo" />
+          <p>یک اشتراک برای تمامی کلاس ها</p>
+        </div>
+        <div className="login-cards">
+          <img src={image1} alt="Class 2" className="full-width-image" />
+        </div>
+        <form className="login-form" onSubmit={handleSubmit}>
+          <label htmlFor="phonenumber" className="right-aligned">شماره موبایل</label>
+          <input
+            type="text"
+            id="phonenumber"
+            name="phonenumber"
+            placeholder="091********"
+            value={phonenumber}
+            onChange={(e) => setPhonenumber(e.target.value)}
+          />
+          <label htmlFor="password" className="right-aligned">رمز عبور</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="********"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button type="submit" className="login-button">ورود</button>
+        </form>
+        {message && <p>{message}</p>}
+      </div>
+    </div>
+  );
+};
 
-        if (results.length > 0) {
-            console.log('User already exists:', phonenumber);
-            return res.status(400).json({ msg: 'User already exists' });
-        }
-
-        bcrypt.hash(password, 10, (err, hashedPassword) => {
-            if (err) {
-                console.error('Error hashing password:', err);
-                return res.status(500).json({ msg: 'Internal server error' });
-            }
-
-            const insertUserQuery = 'INSERT INTO users (phonenumber, password, name, email, userType) VALUES (?, ?, ?, ?, ?)';
-            db.query(insertUserQuery, [phonenumber, hashedPassword, name, email, userType], (err, result) => {
-                if (err) {
-                    console.error('Database query error (insert user):', err);
-                    return res.status(500).json({ msg: 'Internal server error' });
-                }
-                console.log('User registered successfully:', phonenumber);
-                res.status(201).json({ msg: 'User registered successfully' });
-            });
-        });
-    });
-});
-
-// Login Route
-router.post('/login', (req, res) => {
-    const { phonenumber, password } = req.body;
-    console.log('Login request received:', req.body);
-
-    const checkUserQuery = 'SELECT * FROM users WHERE phonenumber = ?';
-    db.query(checkUserQuery, [phonenumber], (err, results) => {
-        if (err) {
-            console.error('Database query error (check user):', err);
-            return res.status(500).json({ msg: 'Internal server error' });
-        }
-
-        if (results.length === 0) {
-            console.log('Invalid credentials (user not found):', phonenumber);
-            return res.status(400).json({ msg: 'Invalid credentials' });
-        }
-
-        const user = results[0];
-
-        bcrypt.compare(password, user.password, (err, isMatch) => {
-            if (err) {
-                console.error('Error comparing passwords:', err);
-                return res.status(500).json({ msg: 'Internal server error' });
-            }
-
-            if (!isMatch) {
-                console.log('Invalid credentials (password mismatch):', phonenumber);
-                return res.status(400).json({ msg: 'Invalid credentials' });
-            }
-
-            const token = jwt.sign({ id: user.id, userType: user.userType }, secretKey, { expiresIn: '24h' });
-            console.log('Login successful, token generated:', token);
-            res.json({ token, userType: user.userType });
-        });
-    });
-});
-
-module.exports = router;
+export default Login;
