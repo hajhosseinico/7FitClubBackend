@@ -20,7 +20,7 @@ const calendarRoutes = require('./routes/calendar');
 
 // Use Routes
 app.use('/auth', authRoutes);
-app.use('/users', userRoutes);
+app.use('/users', userRoutes); // Ensure this is correctly registered
 app.use('/calendar', calendarRoutes);
 
 // Start the server
