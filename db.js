@@ -1,10 +1,10 @@
 const mysql = require('mysql');
 
 const connectionConfig = {
-    host: 'mariadb_new',
-    user: 'root',
-    password: 'my_password',
-    database: '7FitClubDB'
+    host: '7fitclub.com', // Update this to the correct hostname or IP address
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || 'my_password',
+    database: process.env.DB_NAME || '7FitClubDB'
 };
 
 let connection;
