@@ -3,16 +3,15 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 
-const secretKey = 'your_secret_key'; // Change this to a strong secret key
+const secretKey = 'your_secret_key';
 
-const db = require('../db'); // Database connection
+const db = require('../db');
 
 // Registration Route
 router.post('/register', (req, res) => {
     const { phonenumber, password, name, email, userType } = req.body;
     console.log('Register request received:', req.body);
 
-    // Check if user already exists
     const checkUserQuery = 'SELECT * FROM users WHERE phonenumber = ?';
     db.query(checkUserQuery, [phonenumber], (err, results) => {
         if (err) {
@@ -25,14 +24,12 @@ router.post('/register', (req, res) => {
             return res.status(400).json({ msg: 'User already exists' });
         }
 
-        // Hash the password
         bcrypt.hash(password, 10, (err, hashedPassword) => {
             if (err) {
                 console.error('Error hashing password:', err);
                 return res.status(500).json({ msg: 'Internal server error' });
             }
 
-            // Insert new user
             const insertUserQuery = 'INSERT INTO users (phonenumber, password, name, email, userType) VALUES (?, ?, ?, ?, ?)';
             db.query(insertUserQuery, [phonenumber, hashedPassword, name, email, userType], (err, result) => {
                 if (err) {
@@ -51,7 +48,6 @@ router.post('/login', (req, res) => {
     const { phonenumber, password } = req.body;
     console.log('Login request received:', req.body);
 
-    // Check if user exists
     const checkUserQuery = 'SELECT * FROM users WHERE phonenumber = ?';
     db.query(checkUserQuery, [phonenumber], (err, results) => {
         if (err) {
@@ -66,7 +62,6 @@ router.post('/login', (req, res) => {
 
         const user = results[0];
 
-        // Compare password
         bcrypt.compare(password, user.password, (err, isMatch) => {
             if (err) {
                 console.error('Error comparing passwords:', err);
@@ -78,7 +73,6 @@ router.post('/login', (req, res) => {
                 return res.status(400).json({ msg: 'Invalid credentials' });
             }
 
-            // Generate JWT
             const token = jwt.sign({ id: user.id, userType: user.userType }, secretKey, { expiresIn: '24h' });
             console.log('Login successful, token generated:', token);
             res.json({ token, userType: user.userType });
