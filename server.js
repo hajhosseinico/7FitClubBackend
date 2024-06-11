@@ -5,7 +5,7 @@ const app = express();
 const port = 3000;
 
 const corsOptions = {
-    origin: ['http://7fitclub.com', 'http://www.7fitclub.com', 'http://18.118.119.144'],
+    origin: ['http://7fitclub.com', 'http://www.7fitclub.com', 'http://3.133.158.10'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
