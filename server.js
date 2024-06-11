@@ -2,7 +2,7 @@ const express = require('express');
 const mysql = require('mysql');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const cors = require('cors'); // Import cors
+const cors = require('cors');
 
 const app = express();
 const port = 3000;
@@ -13,11 +13,11 @@ const secretKey = 'your_secret_key'; // Change this to a strong secret key
 app.use(express.json());
 
 const corsOptions = {
-    origin: ['http://7fitclub.com', 'http://3.133.158.10'], // Allow both domain and IP
+    origin: ['http://7fitclub.com', 'http://www.7fitclub.com', 'http://3.133.158.10:3000'],
     optionsSuccessStatus: 200,
 };
 
-app.use(cors(corsOptions)); // Use cors middleware
+app.use(cors(corsOptions)); // Use CORS middleware
 
 // Import Routes
 const authRoutes = require('./routes/auth');
