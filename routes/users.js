@@ -13,6 +13,7 @@ router.get('/me', auth, (req, res) => {
             return res.status(500).json({ msg: 'Internal server error' });
         }
         if (results.length === 0) {
+            console.log('User not found in database');
             return res.status(404).json({ msg: 'User not found' });
         }
         console.log('Query Results:', results); // Log the query results
