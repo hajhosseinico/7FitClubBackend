@@ -13,9 +13,8 @@ RUN npm install cors express mysql
 # Copy the rest of the application code to the container
 COPY . .
 
-# Expose port 3000 to the host
-EXPOSE 3000
+# Expose port 3001 to the host
+EXPOSE 3001
 
 # Command to run the application
 CMD ["node", "server.js"]
-
