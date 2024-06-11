@@ -13,7 +13,10 @@ const secretKey = 'your_secret_key'; // Change this to a strong secret key
 app.use(express.json());
 
 const corsOptions = {
-    origin: ['http://7fitclub.com', 'http://www.7fitclub.com', 'http://3.133.158.10:3000'],
+    origin: ['http://7fitclub.com', 'http://www.7fitclub.com', 'http://3.133.158.10'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
     optionsSuccessStatus: 200,
 };
 
