@@ -11,7 +11,13 @@ const secretKey = 'your_secret_key'; // Change this to a strong secret key
 
 // Middleware to parse JSON
 app.use(express.json());
-app.use(cors()); // Use cors middleware
+
+const corsOptions = {
+    origin: ['http://7fitclub.com', 'http://3.133.158.10'], // Allow both domain and IP
+    optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions)); // Use cors middleware
 
 // Import Routes
 const authRoutes = require('./routes/auth');
