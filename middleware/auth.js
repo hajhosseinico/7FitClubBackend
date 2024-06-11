@@ -12,6 +12,7 @@ const auth = (req, res, next) => {
     }
 
     try {
+        // Decode the token (assuming it is base64 encoded)
         const decoded = JSON.parse(Buffer.from(token, 'base64').toString('utf8'));
         req.user = decoded;
         console.log('Decoded User:', req.user); // Log the decoded user
