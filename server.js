@@ -1,30 +1,21 @@
 const express = require('express');
 const cors = require('cors');
-
 const app = express();
-const port = 3000;
 
-const corsOptions = {
-    origin: ['http://7fitclub.com', 'http://www.7fitclub.com', 'http://3.133.158.10'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-    optionsSuccessStatus: 200,
-};
+// Enable CORS for all routes
+app.use(cors());
 
-app.use(cors(corsOptions)); // Use CORS middleware
-app.use(express.json()); // Middleware to parse JSON
+app.use(express.json());
 
-// Import Routes
+// Import routes
 const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/users');
 const calendarRoutes = require('./routes/calendar');
+const userRoutes = require('./routes/users');
 
-// Use Routes
+// Use routes
 app.use('/auth', authRoutes);
-app.use('/users', userRoutes);
 app.use('/calendar', calendarRoutes);
+app.use('/users', userRoutes);
 
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-});
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
