@@ -1,3 +1,4 @@
+require('dotenv').config(); // Load environment variables at the very top
 const express = require('express');
 const cors = require('cors');
 const app = express();
