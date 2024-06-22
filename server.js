@@ -2,6 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 
+// Log the SECRET_KEY to verify it's correctly set
+console.log('SECRET_KEY:', process.env.SECRET_KEY);
+
 // Enable CORS for all routes
 app.use(cors());
 
